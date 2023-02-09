@@ -11,6 +11,9 @@ import com.google.android.material.button.MaterialButton;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private Button see_history;
@@ -137,10 +140,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Context context = Context.enter();
             context.setOptimizationLevel(-1);
             Scriptable scriptable = context.initStandardObjects();
-            String calc = context.evaluateString(scriptable, calcString, "Javascript", 1, null).toString();
-            if (calc.endsWith(".0")) {
-                calc = calc.replace(".0", "");
-            }
+            double result = (double)context.evaluateString(scriptable, calcString, "Javascript", 1, null);
+            DecimalFormat df = new DecimalFormat("#.##");
+            df.setRoundingMode(RoundingMode.CEILING);
+            String calc = df.format(result);
             return calc;
         }
         catch (Exception e) {
